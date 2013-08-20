@@ -88,6 +88,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
         }
         else
         {
+        	echo'ERR: '.$result->Status;
             return false;
         }
 	}
@@ -176,7 +177,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
         		{
         			Phpfox::log('Callback '.$Status);
                    	$sStatus = $Status;
-                    $mss = 'کاربر گرامي ، عمليات  اعتبار سنجي پرداخت شما با خطا مواجه گرديد .<br> درصورتي که پرداخت شما موفقيت آميز انجام شده باشد پس از بررسي اطلاعات پرداخت براي شما ارسال خواهد شد . <br> با تشکر <br>  ';
+                    $mss = 'کاربر گرامي ، عمليات  اعتبار سنجي پرداخت شما با خطا مواجه گرديد .<br> درصورتي که پرداخت شما موفقيت آميز انجام شده باشد پس از بررسي اطلاعات پرداخت براي شما ارسال خواهد شد . <br> با تشکر <br>  .'$res->Status;
                     $messagePage = str_replace('$Message$',$mss,$messagePage);
                     $messagePage = str_replace('$Style$',$style_alrt,$messagePage);
                     echo $messagePage;
@@ -189,7 +190,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
                 $sStatus = 'cancel';
                 header('HTTP/1.1 200 OK');
       		}
-            $mss = 'پرداخت ناموفق / خطا در عمليات پرداخت ! کاربر گرامي ، فرايند پرداخت با خطا مواجه گرديد !<br> با تشکر ';
+            $mss = 'پرداخت ناموفق / خطا در عمليات پرداخت ! کاربر گرامي ، فرايند پرداخت با خطا مواجه گرديد !<br> با تشکر '.$res->Status;
             $messagePage = str_replace('$Message$',$mss,$messagePage);
             $messagePage = str_replace('$Style$',$style_errr,$messagePage);
             echo $messagePage;
