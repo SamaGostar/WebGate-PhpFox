@@ -72,7 +72,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
         $_SESSION['ResNumber'] = $this->_aParam['item_number'].'|'.$amount;
 		$_SESSION['amount'] = $amount*10;
 		$desc = $this->_aParam['item_number'];
-		$result = $this->_send($desc,$api,$amount*10,$ReturnPath){
+		$result = $this->_send($desc,$api,$amount*10,$ReturnPath);
 		
 		$go = "https://www.zarinpal.com/pg/StartPay/". $result->Authority;
 		
@@ -126,7 +126,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 		$amount = $_SESSION['amount'];
         if($status == 'OK')
         {
-        		$result = $this->_get($api,$au,$amount){
+        		$result = $this->_get($api,$au,$amount);
 				//_get($url,$api,$trans_id,$id_get);
         		if($result->Status == 100)// Your Peyment Code Only This Event
         		{
