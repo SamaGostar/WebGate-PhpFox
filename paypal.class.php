@@ -177,7 +177,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
         		{
         			Phpfox::log('Callback '.$Status);
                    	$sStatus = $Status;
-                    $mss = 'کاربر گرامي ، عمليات  اعتبار سنجي پرداخت شما با خطا مواجه گرديد .<br> درصورتي که پرداخت شما موفقيت آميز انجام شده باشد پس از بررسي اطلاعات پرداخت براي شما ارسال خواهد شد . <br> با تشکر <br>  .'$res->Status;
+                    $mss = 'کاربر گرامي ، عمليات  اعتبار سنجي پرداخت شما با خطا مواجه گرديد .<br> درصورتي که پرداخت شما موفقيت آميز انجام شده باشد پس از بررسي اطلاعات پرداخت براي شما ارسال خواهد شد . <br> با تشکر <br>'.$results->Status;
                     $messagePage = str_replace('$Message$',$mss,$messagePage);
                     $messagePage = str_replace('$Style$',$style_alrt,$messagePage);
                     echo $messagePage;
