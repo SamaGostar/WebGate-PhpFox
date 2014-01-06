@@ -66,7 +66,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 
         $api = $this->_aParam['setting']['Zarinpalwg_api'];
         $amount = $this->_aParam['amount'];
-        $ReturnPath =  urlencode(Phpfox::getLib('gateway')->url('paypal'));//$this->_aParam['return'];
+        $ReturnPath =  Phpfox::getLib('gateway')->url('paypal').'&ok';//$this->_aParam['return'];
 		
 		@session_start();
         $_SESSION['ResNumber'] = $this->_aParam['item_number'].'|'.$amount;
@@ -121,8 +121,8 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
         $Price = $aParts[2];
 
         Phpfox::log('Attempting callback');
-		$status = $_GET['Status'];
-		$au = $_GET['Authority'];
+		$status = $this->_aParam['Status'];
+		$au = $this->_aParam['Authority'];
 		$amount = $_SESSION['amount'];
         if($status == 'OK')
         {
