@@ -70,9 +70,9 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 		
 		@session_start();
         $_SESSION['ResNumber'] = $this->_aParam['item_number'].'|'.$amount;
-		$_SESSION['amount'] = $amount*10;
+		$_SESSION['amount'] = $amount;
 		$desc = $this->_aParam['item_number'];
-		$result = $this->_send($desc,$api,$amount*10,$ReturnPath);
+		$result = $this->_send($desc,$api,$amount,$ReturnPath);
 		
 		$go = "https://www.zarinpal.com/pg/StartPay/". $result->Authority;
 		
