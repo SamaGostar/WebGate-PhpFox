@@ -4,7 +4,7 @@
  */
 
 defined('PHPFOX') or exit('NO DICE!');
-class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
+class Phpfox_Gateway_Api_Zarinpal implements Phpfox_Gateway_Interface
 {
 	private $_aParam = array();
 	private $_aCurrency = array('USD', 'GBP', 'EUR', 'AUD', 'CAD', 'JPY', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK', 'ILS', 'MXN', 'BRL', 'MYR', 'PHP', 'TWD', 'THB');
@@ -66,7 +66,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 
         $api = $this->_aParam['setting']['Zarinpalwg_api'];
         $amount = $this->_aParam['amount'];
-        $ReturnPath =  Phpfox::getLib('gateway')->url('paypal').'&ok';//$this->_aParam['return'];
+        $ReturnPath =  Phpfox::getLib('gateway')->url('zarinpal').'&ok';//$this->_aParam['return'];
 		
 		@session_start();
         $_SESSION['ResNumber'] = $this->_aParam['item_number'].'|'.$amount;
@@ -117,29 +117,28 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 
         $api = $this->_aParam['setting']['Zarinpalwg_api'];
 		@session_start();
-        $aParts = explode('|',$$_SESSION['ResNumber']);
+        $aParts = explode('|',$_SESSION['ResNumber']);
         $Price = $aParts[2];
 
         Phpfox::log('Attempting callback');
 		$status = $this->_aParam['Status'];
 		$au = $this->_aParam['Authority'];
 		$amount = $_SESSION['amount'];
-        if($status == 'OK')
+		//print_r($status);
+		//echo'DebugZ';
+        if($status == "OK")
         {
+		//echo'DebugA';
         		$result = $this->_get($api,$au,$amount);
-				//_get($url,$api,$trans_id,$id_get);
+				
         		if($result->Status == 100)// Your Peyment Code Only This Event
         		{
+				echo'DebugB';
                     Phpfox::log('Callback OK');
 
                     Phpfox::log('Attempting to load module: ' . $aParts[0]);
 
-        			if (Phpfox::isModule($aParts[0]))
-        			{
-        				Phpfox::log('Module is valid.');
-        				Phpfox::log('Checking module callback for method: paymentApiCallback');
-        				if (Phpfox::hasCallback($aParts[0], 'paymentApiCallback'))
-        				{
+
         					Phpfox::log('Module callback is valid.');
 
         			  		$sStatus = '100';
@@ -148,7 +147,7 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 
       						Phpfox::log('Executing module callback');
       						Phpfox::callback($aParts[0] . '.paymentApiCallback', array(
-      								'gateway' => 'paypal',
+      								'gateway' => 'zarinpal',
       								'ref' => $$result->Authority,
       								'status' => $result->Status,
       								'item_number' => $aParts[1],
@@ -162,19 +161,12 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
                             echo $messagePage;
 
                             return;
-        				}
-        				else
-        				{
-        					Phpfox::log('Module callback is not valid.');
-        				}
-        			}
-        			else
-        			{
-        				Phpfox::log('Module is not valid.');
-        			}
+        			
+
         		}
         		else
         		{
+				echo'DebugM';
         			Phpfox::log('Callback '.$Status);
                    	$sStatus = $Status;
                     $mss = 'کاربر گرامي ، عمليات  اعتبار سنجي پرداخت شما با خطا مواجه گرديد .<br> درصورتي که پرداخت شما موفقيت آميز انجام شده باشد پس از بررسي اطلاعات پرداخت براي شما ارسال خواهد شد . <br> با تشکر <br>'.$results->Status;
@@ -186,14 +178,15 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 	        }
           	else
       		{
+			echo'DebugZ';
       			Phpfox::log('Callback FAILED');
                 $sStatus = 'cancel';
                 header('HTTP/1.1 200 OK');
+				$mss = 'پرداخت ناموفق / خطا در عمليات پرداخت ! کاربر گرامي ، فرايند پرداخت با خطا مواجه گرديد !<br> با تشکر '.$res->Status;
+				$messagePage = str_replace('$Message$',$mss,$messagePage);
+				$messagePage = str_replace('$Style$',$style_errr,$messagePage);
+				echo $messagePage;
       		}
-            $mss = 'پرداخت ناموفق / خطا در عمليات پرداخت ! کاربر گرامي ، فرايند پرداخت با خطا مواجه گرديد !<br> با تشکر '.$res->Status;
-            $messagePage = str_replace('$Message$',$mss,$messagePage);
-            $messagePage = str_replace('$Style$',$style_errr,$messagePage);
-            echo $messagePage;
     }
 	
 	public function _send($desc,$api,$amount,$redirect){
@@ -221,9 +214,11 @@ class Phpfox_Gateway_Api_Paypal implements Phpfox_Gateway_Interface
 			array(
 					'MerchantID'	 => $api ,
 					'Authority' 	 => $au ,
-					'Amount'	 	=> $amount
+					'Amount'	 => $amount
 				)
+				
 		);
+		//print_r($res);
         return $res;
 	}
 }
