@@ -141,15 +141,15 @@ class Phpfox_Gateway_Api_Zarinpal implements Phpfox_Gateway_Interface
 
         					Phpfox::log('Module callback is valid.');
 
-        			  		$sStatus = '100';
+        			  		$sStatus = 'completed';
 
         					Phpfox::log('Status built: ' . $sStatus);
 
       						Phpfox::log('Executing module callback');
       						Phpfox::callback($aParts[0] . '.paymentApiCallback', array(
       								'gateway' => 'zarinpal',
-      								'ref' => $$result->Authority,
-      								'status' => $result->Status,
+      								'ref' => $au,
+      								'status' => $sStatus,
       								'item_number' => $aParts[1],
       								'total_paid' => $Price
       							)
